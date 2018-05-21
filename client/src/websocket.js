@@ -21,6 +21,7 @@ function configure(ws) {
 
   ws.onmessage = message => {
     const data = String(message.data);
+    console.log("WebSocket Message:", message.data);
 
     if (data.startsWith('MQTT ')) {
       const [, word, count] = data.split(' ');
@@ -28,6 +29,7 @@ function configure(ws) {
         dispatchSet('mqttConnectionAttempts', Number(count));
       } else {
         const connected = word === 'connected';
+        console.log(`mqtt connected: ${String(connected)}`);
         dispatchSet('mqttConnected', connected);
         dispatchSet('mqttConnectionAttempts', 0);
       }
@@ -97,7 +99,7 @@ function isTrainProperty(instanceId: number): boolean {
   const instanceNode = getInstanceNode(instanceId);
   if (!instanceNode) return false;
   const typeNode = getTypeNode(instanceNode);
-  if (typeNode.name === 'train') return true;
+  if (typeNode && typeNode.name === 'train') return true;
 
   const {parentId} = instanceNode;
   return parentId ? isTrainProperty(parentId) : false;
