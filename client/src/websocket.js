@@ -14,12 +14,11 @@ function configure(ws) {
     setTimeout(websocketSetup, 5000);
   };
 
-  ws.onerror = error =>
-    console.error('WebSocket error:', error);
+  ws.onerror = error => console.error('WebSocket error:', error);
 
   ws.onmessage = message => {
     const data = String(message.data);
-    console.log("WebSocket Message:", message.data);
+    console.log('WebSocket Message:', message.data);
 
     if (data.startsWith('MQTT ')) {
       const [, word, count] = data.split(' ');
@@ -37,7 +36,7 @@ function configure(ws) {
     if (data.startsWith('OpenDDS ')) {
       const [, command, secure] = data.split(' ');
       if (command === 'connected') {
-        dispatchSet('openDdsSecure', secure === "secure");
+        dispatchSet('openDdsSecure', secure === 'secure');
       }
       return;
     }
@@ -96,7 +95,9 @@ function getTrainProperty(change) {
     const {name} = typeNode;
     return name === 'engine'
       ? 'detected.idleCalibration'
-      : name === 'lights' ? 'detected.lightCalibration' : null;
+      : name === 'lights'
+        ? 'detected.lightCalibration'
+        : null;
   }
   if (property === 'lifecycle') return 'trainAlive';
 }
@@ -117,6 +118,6 @@ export function send(message: string): void {
 
 export function websocketSetup() {
   const {hostname} = window.location;
-  ws = new WebSocket(`ws://${hostname}:1337`);
+  ws = new WebSocket(`ws://${hostname}:1447`);
   configure(ws);
 }
